@@ -2,6 +2,8 @@
 
 This repository contains Model Context Protocol (MCP) server implementations for Polarion Application Lifecycle Management (ALM) integration.
 
+> 🔒 **Security Notice**: Please review the [Security Threat Model](SECURITY_THREAT_MODEL.md) before deploying to production. This document contains important security considerations and best practices.
+
 MCP Tools are available for Polarion work items, including:
 
 - `get_text_for_workitems_by_id`: Gets the main text content for specified WorkItem IDs.
@@ -250,3 +252,40 @@ docker push peakflames/polarion-remote-mcp-server:{{VERSION}}
 1. Configure the inspector to connect to the server
    i. TransportType: SSE
    i. URL: http://{{your-server-ip}}:5090/{ProjectUrlAlias}/sse
+
+## Security
+
+Security is a critical consideration when deploying MCP servers that integrate with enterprise systems like Polarion.
+
+### Key Security Recommendations
+
+1. **Credential Management**: 
+   - **DO NOT** store plaintext passwords in `appsettings.json` for production
+   - Use environment variables, Azure Key Vault, or .NET User Secrets
+   - Rotate credentials regularly
+
+2. **Network Security**:
+   - Deploy with HTTPS/TLS enabled for the Remote MCP Server
+   - Implement API key authentication for all clients
+   - Use IP whitelisting where appropriate
+
+3. **Container Security** (if using Docker):
+   - Run containers as non-root user
+   - Set resource limits to prevent DoS
+   - Scan container images for vulnerabilities
+
+4. **Monitoring**:
+   - Enable audit logging for all MCP requests
+   - Monitor for unusual access patterns
+   - Set up alerts for authentication failures
+
+### Comprehensive Threat Model
+
+For a complete security assessment including:
+- Detailed architecture diagrams
+- STRIDE threat analysis
+- Attack scenarios and mitigations
+- Security controls implementation guide
+- Compliance considerations
+
+Please refer to the [Security Threat Model](SECURITY_THREAT_MODEL.md) document.
